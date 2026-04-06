@@ -81,31 +81,31 @@ def render_sidebar():
                 st.session_state.selected_uc = None
                 st.rerun()
         
-        nav_btn("📊", "Dashboard", "Dashboard")
-        nav_btn("📦", "Use Cases", "Use Cases")
+        nav_btn("📊", "Dashboard", "dashboard")
+        nav_btn("📦", "Use Cases", "use_cases")
         
         # Analytics and cost tracking for AI team
         if "AI Team" in roles or "Admin" in roles:
             st.markdown('<div style="font-size:0.7rem;font-weight:600;color:var(--text2);letter-spacing:0.08em;text-transform:uppercase;margin:0.8rem 0 0.4rem 0;">Analytics</div>', unsafe_allow_html=True)
-            nav_btn("📈", "Analytics", "Analytics")
-            nav_btn("💰", "Cost Tracking", "Cost Tracking")
-            nav_btn("⚡", "Performance", "Performance")
+            nav_btn("📈", "Analytics", "analytics")
+            nav_btn("💰", "Cost Tracking", "cost_tracking")
+            nav_btn("⚡", "Performance", "performance")
         
         st.markdown('<div style="font-size:0.7rem;font-weight:600;color:var(--text2);letter-spacing:0.08em;text-transform:uppercase;margin:0.8rem 0 0.4rem 0;">Management</div>', unsafe_allow_html=True)
         
-        nav_btn("🤖", "Models", "Models")
+        nav_btn("🤖", "Models", "models")
         
         if "AI Team" in roles or "Admin" in roles:
-            nav_btn("📋", "Activity Log", "Activity Log")
-            nav_btn("👥", "User Feedback", "User Feedback")
+            nav_btn("📋", "Activity Log", "activity_log")
+            nav_btn("👥", "User Feedback", "user_feedback")
         
         st.markdown('<div style="font-size:0.7rem;font-weight:600;color:var(--text2);letter-spacing:0.08em;text-transform:uppercase;margin:0.8rem 0 0.4rem 0;">System</div>', unsafe_allow_html=True)
         
-        nav_btn("🔔", "Notifications", "Notifications")
-        nav_btn("⚙️", "Settings", "Settings")
+        nav_btn("🔔", "Notifications", "notifications")
+        nav_btn("⚙️", "Settings", "settings")
         
         if "Admin" in roles:
-            nav_btn("🛡️", "Admin Panel", "Admin Panel")
+            nav_btn("🛡️", "Admin Panel", "admin")
         
         st.markdown("---")
         
