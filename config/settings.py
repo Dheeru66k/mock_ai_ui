@@ -13,28 +13,34 @@ from dataclasses import dataclass, field
 class AzureSSO:
     """Azure Active Directory SSO Configuration"""
     # Azure AD Application (client) ID
-    CLIENT_ID: str = os.getenv("AZURE_CLIENT_ID", "your-client-id-here")
+    CLIENT_ID: str = field(default_factory=lambda: os.getenv("AZURE_CLIENT_ID", "your-client-id-here"))
     
     # Azure AD tenant ID
-    TENANT_ID: str = os.getenv("AZURE_TENANT_ID", "your-tenant-id-here")
+    TENANT_ID: str = field(default_factory=lambda: os.getenv("AZURE_TENANT_ID", "your-tenant-id-here"))
     
     # Azure AD Application secret
-    CLIENT_SECRET: str = os.getenv("AZURE_CLIENT_SECRET", "your-client-secret-here")
+    CLIENT_SECRET: str = field(default_factory=lambda: os.getenv("AZURE_CLIENT_SECRET", "your-client-secret-here"))
     
     # OAuth2 scopes for AD
-    SCOPES: List[str] = ["https://graph.microsoft.com/.default"]
+    SCOPES: List[str] = field(default_factory=lambda: ["https://graph.microsoft.com/.default"])
     
     # Redirect URI (must match Azure app registration)
-    REDIRECT_URI: str = os.getenv("AZURE_REDIRECT_URI", "http://localhost:8501/auth/callback")
+    REDIRECT_URI: str = field(default_factory=lambda: os.getenv("AZURE_REDIRECT_URI", "http://localhost:8501/auth/callback"))
     
-    # Azure authorization endpoint
-    AUTHORITY_URL: str = f"https://login.microsoftonline.com/{TENANT_ID}"
+    # Azure authorization endpoint (computed in __post_init__)
+    AUTHORITY_URL: str = field(default="", init=False)
     
-    # Token endpoint
-    TOKEN_URL: str = f"{AUTHORITY_URL}/oauth2/v2.0/token"
+    # Token endpoint (computed in __post_init__)
+    TOKEN_URL: str = field(default="", init=False)
     
-    # Authorization endpoint
-    AUTH_URL: str = f"{AUTHORITY_URL}/oauth2/v2.0/authorize"
+    # Authorization endpoint (computed in __post_init__)
+    AUTH_URL: str = field(default="", init=False)
+    
+    def __post_init__(self):
+        """Initialize computed URL fields after dataclass initialization"""
+        self.AUTHORITY_URL = f"https://login.microsoftonline.com/{self.TENANT_ID}"
+        self.TOKEN_URL = f"{self.AUTHORITY_URL}/oauth2/v2.0/token"
+        self.AUTH_URL = f"{self.AUTHORITY_URL}/oauth2/v2.0/authorize"
 
 
 @dataclass
@@ -47,12 +53,12 @@ class APIKeys:
     - GOOGLE_API_KEY: For Gemini models
     - MISTRAL_API_KEY: For Mistral models
     """
-    OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
-    ANTHROPIC_API_KEY: str = os.getenv("ANTHROPIC_API_KEY", "")
-    GOOGLE_API_KEY: str = os.getenv("GOOGLE_API_KEY", "")
-    MISTRAL_API_KEY: str = os.getenv("MISTRAL_API_KEY", "")
-    AZURE_OPENAI_KEY: str = os.getenv("AZURE_OPENAI_KEY", "")
-    AZURE_OPENAI_ENDPOINT: str = os.getenv("AZURE_OPENAI_ENDPOINT", "")
+    OPENAI_API_KEY: str = field(default_factory=lambda: os.getenv("OPENAI_API_KEY", ""))
+    ANTHROPIC_API_KEY: str = field(default_factory=lambda: os.getenv("ANTHROPIC_API_KEY", ""))
+    GOOGLE_API_KEY: str = field(default_factory=lambda: os.getenv("GOOGLE_API_KEY", ""))
+    MISTRAL_API_KEY: str = field(default_factory=lambda: os.getenv("MISTRAL_API_KEY", ""))
+    AZURE_OPENAI_KEY: str = field(default_factory=lambda: os.getenv("AZURE_OPENAI_KEY", ""))
+    AZURE_OPENAI_ENDPOINT: str = field(default_factory=lambda: os.getenv("AZURE_OPENAI_ENDPOINT", ""))
 
 
 @dataclass
@@ -128,7 +134,7 @@ def validate_azure_sso() -> bool:
         azure_sso.TENANT_ID,
         azure_sso.CLIENT_SECRET,
     ]
-    return all(var and var != "your-" + var.split("-")[0] + "-id-here" 
+    return all(var and not var.startswith("your-") 
                for var in required_vars)
 
 

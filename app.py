@@ -20,7 +20,7 @@ from components.sidebar import render_sidebar
 from data.mock_data import generate_all_mock_data
 
 # Import all page modules
-from pages.login import render_login
+from pages.login import render_login_page
 from pages.dashboard import render_dashboard
 from pages.use_cases import render_use_cases
 from pages.models import render_models
@@ -30,7 +30,7 @@ from pages.performance import render_performance
 from pages.notifications import render_notifications
 from pages.settings import render_settings
 from pages.activity_log import render_activity_log
-from pages.user_feedback import render_user_feedback
+from pages.user_feedback import render_feedback
 from pages.admin import render_admin
 
 
@@ -75,7 +75,7 @@ def main():
     
     # Show login page if not authenticated
     if not is_authenticated:
-        render_login()
+        render_login_page()
         return
     
     # Render sidebar with user info and navigation
@@ -111,7 +111,7 @@ def main():
         "notifications": render_notifications,
         "settings": render_settings,
         "activity_log": render_activity_log,
-        "user_feedback": render_user_feedback,
+        "user_feedback": render_feedback,
         "admin": render_admin,
     }
     
