@@ -212,3 +212,23 @@ sso_manager = AzureSSOManager()
 def get_sso_manager() -> AzureSSOManager:
     """Get global SSO manager instance"""
     return sso_manager
+
+
+def get_demo_user() -> Dict:
+    """Get a demo user for testing purposes
+    
+    Returns:
+        Dictionary with demo user information
+    """
+    return {
+        "id": "demo-user-123",
+        "displayName": "Demo User",
+        "mail": "demo@aiplatform.local",
+        "userPrincipalName": "demo@aiplatform.local",
+        "givenName": "Demo",
+        "surname": "User",
+        "department": "AI Team",
+        "officeLocation": "Headquarters",
+        "jobTitle": "AI Engineer",
+        "mobilePhone": "+1-555-0100"
+    }

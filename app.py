@@ -63,6 +63,15 @@ def init_app():
     # Generate and cache mock data
     if "mock_data" not in st.session_state and config.ENABLE_MOCK_DATA:
         st.session_state.mock_data = generate_all_mock_data()
+    
+    # Auto-login with demo account if Azure SSO not configured (for demo/testing)
+    if not st.session_state.auth_manager.is_authenticated() and config.ENABLE_MOCK_DATA:
+        from auth.azure_sso import get_demo_user
+        demo_user = get_demo_user()
+        # Only auto-login once per session
+        if "auto_login_attempted" not in st.session_state:
+            st.session_state.auto_login_attempted = True
+            st.session_state.auth_manager.set_logged_in(demo_user, {"access_token": "demo_token"})
 
 
 def main():
@@ -93,7 +102,8 @@ def main():
     }
     
     # Check access permissions
-    user_roles = auth_manager.get_user_roles(auth_manager.session_state.get("user_email", ""))
+    user_email = auth_manager.get_user_email() or ""
+    user_roles = auth_manager.get_user_roles(user_email)
     if page in restricted_pages:
         if not any(role in user_roles for role in restricted_pages[page]):
             st.warning("⛔ You don't have access to this page. Please contact your administrator.")
