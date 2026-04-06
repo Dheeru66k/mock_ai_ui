@@ -146,7 +146,7 @@ class AzureSSOManager:
         st.session_state.user_info = user_info
         st.session_state.auth_token = token.get("access_token")
         st.session_state.login_timestamp = datetime.now().isoformat()
-        st.session_state.active_page = "Dashboard"
+        st.session_state.active_page = "dashboard"
     
     def logout(self):
         """Clear session state to log out"""

@@ -52,10 +52,6 @@ def init_app():
         st.session_state.auth_manager = AzureSSOManager()
         st.session_state.auth_manager.init_session()
     
-    # Initialize active page
-    if "active_page" not in st.session_state:
-        st.session_state.active_page = "login" if not st.session_state.auth_manager.is_authenticated() else "dashboard"
-    
     # Initialize dark mode
     if "dark_mode" not in st.session_state:
         st.session_state.dark_mode = config.DARK_MODE_DEFAULT
@@ -72,6 +68,10 @@ def init_app():
         if "auto_login_attempted" not in st.session_state:
             st.session_state.auto_login_attempted = True
             st.session_state.auth_manager.set_logged_in(demo_user, {"access_token": "demo_token"})
+    
+    # Initialize active page (must be after login attempt)
+    if "active_page" not in st.session_state:
+        st.session_state.active_page = "dashboard" if st.session_state.auth_manager.is_authenticated() else "login"
 
 
 def main():

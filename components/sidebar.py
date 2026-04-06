@@ -14,6 +14,18 @@ def render_sidebar():
     sso = get_sso_manager()
     user = sso.get_current_user()
     
+    # If user is not loaded yet, try to get from st.session_state directly
+    if not user and "user_info" in st.session_state:
+        user = st.session_state.user_info
+    
+    # Fallback to demo user if still no user
+    if not user:
+        from auth.azure_sso import get_demo_user
+        user = get_demo_user()
+        # Auto-set in session
+        if "user_info" not in st.session_state:
+            st.session_state.user_info = user
+    
     if not user:
         return
     
